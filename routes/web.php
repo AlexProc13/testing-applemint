@@ -20,9 +20,10 @@ $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 
 //testing
 $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
-        $router->get('users', function() {
-            $users = \App\User::all();
-            return response()->json($users);
+        $router->get('test', function() {
+            return response()->json('ok');
         });
     }
 );
+
+//main act
