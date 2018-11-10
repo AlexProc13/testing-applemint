@@ -15,10 +15,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-//auth jwt
+//auth jwt - get key
 $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 
-//test
+//testing
 $router->group(['middleware' => 'jwt.auth'], function() use ($router) {
         $router->get('users', function() {
             $users = \App\User::all();
