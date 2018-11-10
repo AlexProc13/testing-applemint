@@ -17,3 +17,12 @@ $router->get('/', function () use ($router) {
 
 //auth jwt
 $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
+
+//test
+$router->group(['middleware' => 'jwt.auth'], function() use ($router) {
+        $router->get('users', function() {
+            $users = \App\User::all();
+            return response()->json($users);
+        });
+    }
+);
