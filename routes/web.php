@@ -14,3 +14,6 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+//auth jwt
+$router->post('auth/login', ['uses' => 'AuthController@authenticate']);
