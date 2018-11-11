@@ -43,7 +43,7 @@ class OrderController extends Controller
         //apply confines
         DB::beginTransaction();
         try {
-            $currentProduct = Product::select(['id', 'name', 'description'])
+            $currentProduct = Product::select(['id', 'name', 'description', 'price'])
                 ->where([
                     ['id', '=', $request->product_id],
                     ['quantity', '>', $this->params['config']['quantityLimit']],
@@ -65,6 +65,7 @@ class OrderController extends Controller
             $act = [
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
+                'total' => (int) $request->quantity * (float) $currentProduct->price,
                 'product' => $currentProduct->toArray()
             ];
             //write to log file
