@@ -11,9 +11,6 @@
 |
 */
 
-
-
-
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -25,6 +22,7 @@ $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 $router->group(['middleware' => ['jwt.auth']], function () use ($router) {
 
     /*main act*/
+
     //category
     $router->group(['prefix' => 'category'], function () use ($router) {
         $router->post('create', 'CategoryController@create');
@@ -35,7 +33,13 @@ $router->group(['middleware' => ['jwt.auth']], function () use ($router) {
     });
 
     //product
-
+    $router->group(['prefix' => 'product'], function () use ($router) {
+        $router->post('create', 'ProductController@create');
+        $router->get('read/{id}', 'ProductController@read');
+        $router->post('update/{id}', 'ProductController@update');//might use put method
+        $router->delete('delete/{id}', 'ProductController@delete');
+        $router->get('list', 'ProductController@list');
+    });
 
     //orders
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Validator;
-use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +12,7 @@ class ProductController extends Controller
      * @var array
      */
 
-    protected $fields = ['id', 'name', 'category_id', 'price', 'quantity', 'state'];
+    protected $fields = ['id', 'name', 'description', 'category_id', 'price', 'quantity', 'state'];
 
     /**
      * Create a new controller instance.
@@ -29,22 +29,18 @@ class ProductController extends Controller
         $validator = Validator::make($request->toArray(), [
             'name' => 'string|min:3|max:100|required',
             'description' => 'string|min:3|max:1000|required',
-            'alias' => 'string|min:3|max:30|required',
+            'category_id' => 'integer|exists:categories,id|required',
+            'price' => 'numeric|min:0.01|required',
+            'quantity' => 'integer|required',
             'state' => 'integer|between:0,1|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+        $fieldsCreate = $request->only($this->fields);
 
         try {
-            Category::create(
-                [
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'alias' => $request->alias,
-                    'state' => $request->state,
-                ]
-            );
+            Product::create($fieldsCreate);
             return response()->json([
                 'success' => true
             ]);
@@ -66,8 +62,9 @@ class ProductController extends Controller
         }
         //act
         try {
-            $caterory = Category::select($this->fields)->where('id', $request->id)->firstOrFail();
-            return response()->json($caterory);
+            $product = Product::select($this->fields)
+                ->with('category:id,name,description,alias,state')->where('id', $request->id)->firstOrFail();;
+            return response()->json($product);
         } catch (\Exception $e) {
             return $this->error();
         }
@@ -75,13 +72,15 @@ class ProductController extends Controller
 
     public function update(Request $request)
     {
+        //validation
         $requestArray = $request->toArray();
         $requestArray['id'] = $request->id;
         $validator = Validator::make($requestArray, [
-            'id' => 'integer|required',
             'name' => 'string|min:3|max:100',
             'description' => 'string|min:3|max:1000',
-            'alias' => 'string|min:3|max:30',
+            'category_id' => 'integer|exists:categories,id',
+            'price' => 'numeric|min:0.01',
+            'quantity' => 'integer',
             'state' => 'integer|between:0,1',
         ]);
         if ($validator->fails()) {
@@ -92,9 +91,9 @@ class ProductController extends Controller
         if (empty($updateFields)) {
             return $this->error();
         }
-
+        //act
         try {
-            Category::where('id', $request->id)->update($updateFields);
+            Product::where('id', $request->id)->update($updateFields);
             return response()->json([
                 'success' => true
             ]);
@@ -116,7 +115,7 @@ class ProductController extends Controller
         }
         //act
         try {
-            $status = Category::select($this->fields)->where('id', $request->id)->delete();
+            $status = Product::where('id', $request->id)->delete();
             return response()->json([
                 'success' => boolval($status)
             ]);
@@ -129,8 +128,8 @@ class ProductController extends Controller
     {
         //validate empty
         try {
-            $categories = Category::select($this->fields)->get();
-            return response()->json($categories);
+            $products = Product::select($this->fields)->with('category:id,name,description,alias,state')->get();
+            return response()->json($products);
         } catch (\Exception $e) {
             $this->error();
         }

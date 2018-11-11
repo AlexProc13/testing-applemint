@@ -115,7 +115,7 @@ class CategoryController extends Controller
         }
         //act
         try {
-            $status = Category::select($this->fields)->where('id', $request->id)->delete();
+            $status = Category::where('id', $request->id)->delete();
             return response()->json([
                 'success' => boolval($status)
             ]);
