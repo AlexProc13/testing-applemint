@@ -11,6 +11,10 @@ class ProductController extends Controller
     /**
      * @var array
      */
+    protected $params = [];
+    /**
+     * @var array
+     */
 
     protected $fields = ['id', 'name', 'description', 'category_id', 'price', 'quantity', 'state'];
 
@@ -21,7 +25,7 @@ class ProductController extends Controller
      */
     public function __construct()
     {
-
+        $this->params['config'] = config('app');
     }
 
     public function create(Request $request)
@@ -124,14 +128,25 @@ class ProductController extends Controller
         }
     }
 
-    public function list()
+    public function list(Request $request)
     {
         //validate empty
+        //act
+        if ($request->has('start')) {
+            $this->params['config']['skipData'] = $request->start;
+        }
+
+        if ($request->has('end')) {
+            $this->params['config']['takeData'] = $request->end;
+        }
+
         try {
-            $products = Product::select($this->fields)->with('category:id,name,description,alias,state')->get();
+            $products = Product::select($this->fields)->with('category:id,name,description,alias,state')
+                ->skip($this->params['config']['skipData'])
+                ->take($this->params['config']['takeData'])->get();
             return response()->json($products);
         } catch (\Exception $e) {
-            $this->error();
+            return $this->error();
         }
     }
 
@@ -148,14 +163,23 @@ class ProductController extends Controller
             return $validator->errors();
         }
         //act
+        if ($request->has('start')) {
+            $this->params['config']['skipData'] = $request->start;
+        }
+
+        if ($request->has('end')) {
+            $this->params['config']['takeData'] = $request->end;
+        }
 
         try {
             $products = Product::select($this->fields)
                 ->with('category:id,name,description,alias,state')
-                ->where(['category_id' => $request->categoryId])->get();
+                ->where(['category_id' => $request->categoryId])
+                ->skip($this->params['config']['skipData'])
+                ->take($this->params['config']['takeData'])->get();
             return response()->json($products);
         } catch (\Exception $e) {
-            $this->error();
+            return $this->error();
         }
     }
 }

@@ -11,6 +11,10 @@ class CategoryController extends Controller
     /**
      * @var array
      */
+    protected $params = [];
+    /**
+     * @var array
+     */
     protected $fields = ['id', 'name', 'description', 'alias', 'state'];
 
     /**
@@ -20,7 +24,7 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
-
+        $this->params['config'] = config('app');
     }
 
     public function create(Request $request)
@@ -124,14 +128,24 @@ class CategoryController extends Controller
         }
     }
 
-    public function list()
+    public function list(Request $request)
     {
         //validate empty
+        if ($request->has('start')) {
+            $this->params['config']['skipData'] = $request->start;
+        }
+
+        if ($request->has('end')) {
+            $this->params['config']['takeData'] = $request->end;
+        }
+
         try {
-            $categories = Category::select($this->fields)->get();
+            $categories = Category::select($this->fields)
+                ->skip($this->params['config']['skipData'])
+                ->take($this->params['config']['takeData'])->get();
             return response()->json($categories);
         } catch (\Exception $e) {
-            $this->error();
+            return $this->error();
         }
     }
 }
