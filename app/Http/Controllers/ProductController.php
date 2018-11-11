@@ -134,4 +134,28 @@ class ProductController extends Controller
             $this->error();
         }
     }
+
+    public function listByCategory(Request $request)
+    {
+        //validate
+        $requestArray = $request->toArray();
+        $requestArray['categoryId'] = $request->categoryId;
+
+        $validator = Validator::make($requestArray, [
+            'categoryId' => 'integer|exists:categories,id|required'
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        //act
+
+        try {
+            $products = Product::select($this->fields)
+                ->with('category:id,name,description,alias,state')
+                ->where(['category_id' => $request->categoryId])->get();
+            return response()->json($products);
+        } catch (\Exception $e) {
+            $this->error();
+        }
+    }
 }
