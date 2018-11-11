@@ -17,8 +17,8 @@ class CreateTableCategories extends Migration
             $table->increments('id');
             $table->string('name', 100);
             $table->text('description');
-            $table->string('alias',30);
-            $table->tinyInteger('state');
+            $table->string('alias',30)->unique();
+            $table->tinyInteger('state')->index();
             $table->timestamps();
         });
     }

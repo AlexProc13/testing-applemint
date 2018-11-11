@@ -25,7 +25,7 @@ class CreateTableOrders extends Migration
             $table->unsignedDecimal('total', 12, 2);
             $table->unsignedInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');
-            $table->integer('quantity');
+            $table->integer('quantity')->index();
             $table->timestamps();
         });
     }
