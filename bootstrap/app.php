@@ -67,6 +67,10 @@ $app->routeMiddleware([
 ]);
 
 $app->middleware([
+    App\Http\Middleware\GeneralMiddleware::class
+]);
+
+$app->middleware([
     \Barryvdh\Cors\HandleCors::class
 ]);
 

@@ -24,7 +24,20 @@ $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 //testing
 $router->group(['middleware' => ['jwt.auth']], function () use ($router) {
 
-    //main act
+    /*main act*/
+    //category
+    $router->group(['prefix' => 'category'], function () use ($router) {
+        $router->post('create', 'CategoryController@create');
+        $router->get('read/{id}', 'CategoryController@read');
+        $router->post('update/{id}', 'CategoryController@update');//might use put method
+        $router->delete('delete/{id}', 'CategoryController@delete');
+        $router->get('list', 'CategoryController@list');
+    });
+
+    //product
+
+
+    //orders
 
 
     //testing
