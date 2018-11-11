@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Log;
 use Validator;
 use App\Models\Product;
@@ -40,6 +41,7 @@ class OrderController extends Controller
             return $validator->errors();
         }
         //apply confines
+        DB::beginTransaction();
         try {
             $currentProduct = Product::select(['id', 'name', 'description'])
                 ->where([
@@ -47,6 +49,8 @@ class OrderController extends Controller
                     ['quantity', '>', $this->params['config']['quantityLimit']],
                     ['price', '>', $this->params['config']['quantityLimit']],
                     ['state', '=', $this->params['config']['state']['on']],
+                    //importance
+                    ['quantity', '>=', $request->quantity]
                 ])->first();
 
             if (is_null($currentProduct)) {
@@ -55,6 +59,8 @@ class OrderController extends Controller
                 ]);
             }
             //edit quantity
+            Product::where('id', $request->product_id)->update([
+                'quantity' => DB::raw("quantity - {$request->quantity}")]);
 
             $act = [
                 'product_id' => $request->product_id,
@@ -62,14 +68,17 @@ class OrderController extends Controller
                 'product' => $currentProduct->toArray()
             ];
             //write to log file
-            Log::info(['createOrder' => $act]);
-            return response()->json([
-                'success' => true,
-                'message' => $act
-            ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return $this->error();
         }
+        //save
+        DB::commit();
+        Log::info(['createOrder' => $act]);
+        return response()->json([
+            'success' => true,
+            'message' => $act
+        ]);
     }
 
 }
