@@ -12,12 +12,6 @@ class JwtMiddleware
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        if (!$request->isJson()) {
-            return response()->json([
-                'error' => 'Only JSON. Add headers.'
-            ]);
-        }
-
         $token = $request->get('token');
         if (!$token) {
             return response()->json([
