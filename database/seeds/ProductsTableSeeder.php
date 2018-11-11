@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Seeder;
 
-class CategoriesTableSeeder extends Seeder
+class ProductsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,24 +16,28 @@ class CategoriesTableSeeder extends Seeder
         $defaut = [
             [
                 'id' => 1,
-                'name' => 'category1',
-                'description' => 'description2',
-                'alias' => 'ct1',
+                'name' => 'product1',
+                'description' => 'description1',
+                'category_id' => 1,
+                'price' => 122,
+                'quantity' => 100,
                 'state' => 1,
                 'created_at' => $date,
                 'updated_at' => $date
             ],
             [
                 'id' => 2,
-                'name' => 'category2',
+                'name' => 'product2',
                 'description' => 'description2',
-                'alias' => 'ct2',
+                'category_id' => 1,
+                'price' => 50,
+                'quantity' => 13,
                 'state' => 1,
                 'created_at' => $date,
                 'updated_at' => $date
             ]
         ];
 
-        Category::insert($defaut);
+        Product::insert($defaut);
     }
 }
