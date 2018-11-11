@@ -39,11 +39,13 @@ $router->group(['middleware' => ['jwt.auth']], function () use ($router) {
         $router->post('update/{id}', 'ProductController@update');//might use put method
         $router->delete('delete/{id}', 'ProductController@delete');
         $router->get('list', 'ProductController@list');
-        $router->get('listByCategory/{categoryId}', 'ProductController@listByCategory');
+        $router->get('listByCategory/{category_id}', 'ProductController@listByCategory');
     });
 
     //orders
-
+    $router->group(['prefix' => 'order'], function () use ($router) {
+        $router->post('create', 'OrderController@create');
+    });
 
     //testing
     $router->post('test', function () {

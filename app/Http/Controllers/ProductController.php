@@ -154,10 +154,10 @@ class ProductController extends Controller
     {
         //validate
         $requestArray = $request->toArray();
-        $requestArray['categoryId'] = $request->categoryId;
+        $requestArray['category_id'] = $request->category_id;
 
         $validator = Validator::make($requestArray, [
-            'categoryId' => 'integer|exists:categories,id|required'
+            'category_id' => 'integer|exists:categories,id|required'
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -174,7 +174,7 @@ class ProductController extends Controller
         try {
             $products = Product::select($this->fields)
                 ->with('category:id,name,description,alias,state')
-                ->where(['category_id' => $request->categoryId])
+                ->where(['category_id' => $request->category_id])
                 ->skip($this->params['config']['skipData'])
                 ->take($this->params['config']['takeData'])->get();
             return response()->json($products);
