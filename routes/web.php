@@ -11,6 +11,9 @@
 |
 */
 
+
+
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -19,11 +22,15 @@ $router->get('/', function () use ($router) {
 $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 
 //testing
-$router->group(['middleware' => 'jwt.auth'], function() use ($router) {
-        $router->get('test', function() {
-            return response()->json('ok');
-        });
-    }
+$router->group(['middleware' => ['jwt.auth']], function () use ($router) {
+
+    //main act
+
+
+    //testing
+    $router->post('test', function () {
+        return response()->json('ok');
+    });
+}
 );
 
-//main act

@@ -28,6 +28,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('app');
+$app->configure('cors');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -38,6 +39,7 @@ $app->configure('app');
 | your own bindings here if you like or you can make another file.
 |
 */
+$app->register(Barryvdh\Cors\ServiceProvider::class);
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -62,6 +64,10 @@ $app->singleton(
 
 $app->routeMiddleware([
     'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+]);
+
+$app->middleware([
+    \Barryvdh\Cors\HandleCors::class
 ]);
 
 // $app->middleware([
