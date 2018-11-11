@@ -19,7 +19,7 @@ class CreateTableProducts extends Migration
             $table->text('description');
             $table->unsignedInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->unsignedDecimal('price', 12, 2)->default(0.00);
+            $table->unsignedDecimal('price', 12, 2)->default(0.00)->index();
             $table->integer('quantity')->index();
             $table->tinyInteger('state')->index();
             $table->timestamps();
