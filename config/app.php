@@ -2,7 +2,7 @@
 
 return [
     'expirationTime' => 3600,
-    'stage' => [
+    'state' => [
         'off' => 0,
         'on' => 1,
     ],
