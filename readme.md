@@ -21,7 +21,8 @@ I use lumen.
 -make 'composer install'
 - create file .env how .env.example and set APP_KEY and JWT_SECRET. 
 Example APP_KEY=nlKIKzzGC06xtgu6pHvuEb4pKf1gha4m and JWT_SECRET=nlKIKzzGC06xtgu6pHvuEb4pKf1gha4m
-This for example.We must to generate own crypto key. 'str_random(32)'
+
+This for example.We must to generate own crypto key. 'str_random(32)'.
 - make 'php artisan migrate'
 - make 'php artisan db:seed'
 - make php -S localhost:8000 -t public
