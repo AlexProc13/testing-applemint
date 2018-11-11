@@ -12,10 +12,10 @@ class ProductController extends Controller
      * @var array
      */
     protected $params = [];
+
     /**
      * @var array
      */
-
     protected $fields = ['id', 'name', 'description', 'category_id', 'price', 'quantity', 'state'];
 
     /**
@@ -28,6 +28,10 @@ class ProductController extends Controller
         $this->params['config'] = config('app');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->toArray(), [
@@ -53,6 +57,10 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function read(Request $request)
     {
         //validate
@@ -67,13 +75,17 @@ class ProductController extends Controller
         //act
         try {
             $product = Product::select($this->fields)
-                ->with('category:id,name,description,alias,state')->where('id', $request->id)->firstOrFail();;
+                ->with('category:id,name,description,alias,state')->where('id', $request->id)->firstOrFail();
             return response()->json($product);
         } catch (\Exception $e) {
             return $this->error();
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request)
     {
         //validation
@@ -106,6 +118,10 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete(Request $request)
     {
         //validate
@@ -128,6 +144,10 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function list(Request $request)
     {
         //validate empty
@@ -150,6 +170,10 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function listByCategory(Request $request)
     {
         //validate

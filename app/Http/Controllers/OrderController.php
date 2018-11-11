@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Validator;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class OrderController extends Controller
     /**
      * @var array
      */
+    protected $fieldsProduct = ['id', 'name', 'description', 'category_id', 'price', 'quantity', 'state'];
 
     /**
      * Create a new controller instance.
@@ -28,24 +30,42 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-        dd(1);
+        //validate
         $validator = Validator::make($request->toArray(), [
-            'name' => 'string|min:3|max:100|required',
-            'product_id' => 'string|min:3|max:1000|required',
-            'category_id' => 'integer|exists:categories,id|required',
-            'price' => 'numeric|min:0.01|required',
+            'product_id' => 'integer|exists:products,id|required',
+            //check quantity
             'quantity' => 'integer|required',
-            'state' => 'integer|between:0,1|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $fieldsCreate = $request->only($this->fields);
-
+        //apply confines
         try {
-            Product::create($fieldsCreate);
+            $currentProduct = Product::select(['id', 'name', 'description'])
+                ->where([
+                    ['id', '=', $request->product_id],
+                    ['quantity', '>', $this->params['config']['quantityLimit']],
+                    ['price', '>', $this->params['config']['quantityLimit']],
+                    ['state', '=', $this->params['config']['state']['on']],
+                ])->first();
+
+            if (is_null($currentProduct)) {
+                return response()->json([
+                    'error' => 'Unable to buy goods. There are restrictions.'
+                ]);
+            }
+            //edit quantity
+
+            $act = [
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity,
+                'product' => $currentProduct->toArray()
+            ];
+            //write to log file
+            Log::info(['createOrder' => $act]);
             return response()->json([
-                'success' => true
+                'success' => true,
+                'message' => $act
             ]);
         } catch (\Exception $e) {
             return $this->error();

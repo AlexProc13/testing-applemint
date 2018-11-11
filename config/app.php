@@ -7,5 +7,7 @@ return [
         'on' => 1,
     ],
     'skipData' => 0,
-    'takeData' => 100
+    'takeData' => 100,
+    'quantityLimit' => 0,
+    'priceLimit' => 0
 ];

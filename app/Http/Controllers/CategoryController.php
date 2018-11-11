@@ -27,6 +27,10 @@ class CategoryController extends Controller
         $this->params['config'] = config('app');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->toArray(), [
@@ -56,6 +60,10 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function read(Request $request)
     {
         //validate
@@ -76,6 +84,10 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request)
     {
         $requestArray = $request->toArray();
@@ -106,6 +118,10 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete(Request $request)
     {
         //validate
@@ -128,6 +144,10 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function list(Request $request)
     {
         //validate empty

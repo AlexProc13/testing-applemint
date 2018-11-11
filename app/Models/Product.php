@@ -16,6 +16,9 @@ class Product extends Model
         'name', 'description', 'category_id', 'price', 'quantity', 'state'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
