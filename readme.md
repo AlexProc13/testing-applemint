@@ -6,17 +6,13 @@ Task - https://www.evernote.com/client/snv?noteGuid=27530b89-8d92-4827-bcf1-9b07
 
 # 0) Requiraments
 -php7.2
-
--composer
-
--git
-
 I use lumen.
  This how laravel only faster. By code don't have difference with laravel.
 
 
 # 1) Start
 -create directory
+
 -open terminal in this directory
 
 -make 'git init'
